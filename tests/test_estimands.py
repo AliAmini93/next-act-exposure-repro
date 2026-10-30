@@ -81,3 +81,16 @@ def test_candidate_scores_are_summed_token_log_probabilities_without_length_norm
     cands = [[10, 1], [11, 12, 13, 1]]  # two and four tokens including the end-of-turn token
     s = sc.score_naive(prefix, cands)
     assert np.allclose(s, [-2 * np.log(50), -4 * np.log(50)])  # a longer string scores lower: sum, not mean
+
+
+def test_lexical_learner_fits_and_scores_synthetic_tokens():
+    """The TF-IDF + logistic-regression learner of the randomised presence design runs on synthetic token strings;
+    a class absent from the training labels gets a constant score."""
+    from nextact import lexical as R
+    toks = np.array(['a b c', 'a b d', 'c d e', 'a c e', 'b d e', 'a b c d'] * 3, dtype=object)
+    Y = np.zeros((18, 3))
+    Y[::2, 0] = 1
+    Y[1::2, 1] = 1  # class 2 never occurs
+    P = R.lexical_fit_predict(toks[:12], Y[:12], toks[12:])
+    assert P.shape == (6, 3) and np.all((P >= 0) & (P <= 1))
+    assert np.all(P[:, 2] == 0.0)

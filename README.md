@@ -119,7 +119,8 @@ Each step is a module command, e.g. `python -m nextact.lexical analyze --corpus 
 | literature-review counts (78 studies) | not included | a manual coding of published papers |
 
 **Verification of the release:**
-- every analysis command was run on the original saved predictions and scores, and reproduced the original aggregate outputs exactly;
+- every analysis command was run on the original saved predictions and scores, and reproduced every number of the original aggregate outputs exactly; a few descriptive text labels inside some outputs were reworded;
+- the separately written recomputations agree with them;
 - a sample of lexical fits was re-run from the corpora and reproduced the saved predictions exactly;
 - language-model and encoder inference were not re-run for this release.
 

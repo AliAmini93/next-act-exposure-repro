@@ -24,6 +24,8 @@ from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
 import pandas as pd
 
 from nextact import protocol as P  # noqa: E402
@@ -247,8 +249,26 @@ def plan_fingerprints(plans):
 # ----------------------------------------------------------------------------------------------------
 # Lexical fits
 # ----------------------------------------------------------------------------------------------------
+def tfidf_lr_fit_predict(tok_train, Y_train, tok_eval, C=1.0):
+    """TF-IDF (1-2-grams over whitespace tokens, min_df 2, sublinear tf) and one-vs-rest L2 logistic regression
+    (liblinear, C = 1). Classes constant in the training set get a constant score."""
+    vec = TfidfVectorizer(token_pattern=r'\S+', lowercase=False, ngram_range=(1, 2), min_df=2,
+                          sublinear_tf=True, dtype=np.float64)
+    Xtr = vec.fit_transform(tok_train)
+    Xev = vec.transform(tok_eval)
+    P = np.zeros((Xev.shape[0], Y_train.shape[1]))
+    for c in range(Y_train.shape[1]):
+        y = Y_train[:, c]
+        if y.min() == y.max():  # class absent (or universal) in training: constant score
+            P[:, c] = float(y[0])
+            continue
+        clf = LogisticRegression(C=C, solver='liblinear', max_iter=1000, random_state=0)
+        clf.fit(Xtr, y)
+        P[:, c] = clf.predict_proba(Xev)[:, 1]
+    return P
+
+
 def lexical_fit_predict(tok_train, Y_train, tok_eval):
-    import g3_tfidf_experiment as g3  # frozen reference learner, imported unchanged
     return tfidf_lr_fit_predict(tok_train, Y_train, tok_eval, C=1.0)
 
 
