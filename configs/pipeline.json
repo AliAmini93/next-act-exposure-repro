@@ -1,0 +1,452 @@
+{
+ "_note": "Ordered steps that regenerate every reported estimate. scripts/reproduce.py runs them (use --dry-run to print the commands, --only to select stages). 'gpu': needs a CUDA GPU and the pinned models; 'cpu' steps need only the corpora. Commands, caps and halt limits are those recorded for the original runs. The Mistral steps need sentencepiece.",
+ "stages": [
+  {
+   "stage": "lexical",
+   "device": "cpu",
+   "steps": [
+    [
+     "lexical",
+     "preflight"
+    ],
+    [
+     "lexical",
+     "run-all",
+     "--n-jobs",
+     "8"
+    ],
+    [
+     "knn",
+     "--corpus",
+     "{corpus}"
+    ]
+   ],
+   "corpora": [
+    "sgd",
+    "star",
+    "ami"
+   ],
+   "_order": "run-all fits every corpus and design; knn then runs per corpus"
+  },
+  {
+   "stage": "encoder",
+   "device": "gpu",
+   "steps": [
+    [
+     "encoder",
+     "--corpus",
+     "{corpus}",
+     "--designs",
+     "D1,D6"
+    ]
+   ],
+   "corpora": [
+    "sgd",
+    "star",
+    "ami"
+   ]
+  },
+  {
+   "stage": "lexical_analysis",
+   "device": "cpu",
+   "steps": [
+    [
+     "lexical",
+     "analyze",
+     "--corpus",
+     "{corpus}",
+     "--learner",
+     "lex"
+    ],
+    [
+     "lexical",
+     "analyze",
+     "--corpus",
+     "{corpus}",
+     "--learner",
+     "enc"
+    ],
+    [
+     "lexical",
+     "analyze",
+     "--corpus",
+     "{corpus}",
+     "--learner",
+     "knn"
+    ],
+    [
+     "lexical_explore",
+     "--corpus",
+     "{corpus}"
+    ]
+   ],
+   "corpora": [
+    "sgd",
+    "star",
+    "ami"
+   ]
+  },
+  {
+   "stage": "icl",
+   "device": "gpu",
+   "steps": [
+    [
+     "icl",
+     "plan",
+     "--corpus",
+     "{corpus}"
+    ],
+    [
+     "icl",
+     "run",
+     "--corpus",
+     "{corpus}",
+     "--cap",
+     "20000",
+     "--halt-hours",
+     "8"
+    ],
+    [
+     "icl",
+     "run",
+     "--corpus",
+     "{corpus}",
+     "--cap",
+     "9000",
+     "--halt-hours",
+     "4",
+     "--model",
+     "mistral_7b"
+    ],
+    [
+     "icl",
+     "analyze",
+     "--corpus",
+     "{corpus}",
+     "--model",
+     "qwen25_7b"
+    ],
+    [
+     "icl",
+     "analyze",
+     "--corpus",
+     "{corpus}",
+     "--model",
+     "mistral_7b"
+    ],
+    [
+     "icl_explore",
+     "--corpus",
+     "{corpus}",
+     "--model",
+     "qwen25_7b"
+    ],
+    [
+     "icl_explore",
+     "--corpus",
+     "{corpus}",
+     "--model",
+     "mistral_7b"
+    ]
+   ],
+   "corpora": [
+    "sgd",
+    "ami"
+   ]
+  },
+  {
+   "stage": "icl_star",
+   "device": "gpu",
+   "steps": [
+    [
+     "icl",
+     "plan",
+     "--corpus",
+     "star"
+    ],
+    [
+     "icl",
+     "run",
+     "--corpus",
+     "star",
+     "--cap",
+     "23750",
+     "--halt-hours",
+     "8",
+     "--no-gen"
+    ],
+    [
+     "icl",
+     "analyze",
+     "--corpus",
+     "star",
+     "--model",
+     "qwen25_7b"
+    ],
+    [
+     "icl_explore",
+     "--corpus",
+     "star",
+     "--model",
+     "qwen25_7b"
+    ]
+   ],
+   "corpora": [
+    "star"
+   ]
+  },
+  {
+   "stage": "icl_fresh",
+   "device": "gpu",
+   "steps": [
+    [
+     "icl_fresh",
+     "plan",
+     "--corpus",
+     "{corpus}"
+    ],
+    [
+     "icl_fresh",
+     "run",
+     "--corpus",
+     "{corpus}",
+     "--cap",
+     "21000",
+     "--halt-hours",
+     "8"
+    ],
+    [
+     "icl_fresh",
+     "run",
+     "--corpus",
+     "{corpus}",
+     "--cap",
+     "14000",
+     "--halt-hours",
+     "4",
+     "--model",
+     "mistral_7b"
+    ],
+    [
+     "icl_fresh",
+     "analyze",
+     "--corpus",
+     "{corpus}",
+     "--model",
+     "qwen25_7b"
+    ],
+    [
+     "icl_fresh",
+     "analyze",
+     "--corpus",
+     "{corpus}",
+     "--model",
+     "mistral_7b"
+    ]
+   ],
+   "corpora": [
+    "sgd",
+    "ami"
+   ]
+  },
+  {
+   "stage": "unlabelled",
+   "device": "gpu",
+   "steps": [
+    [
+     "unlabelled",
+     "plan",
+     "--corpus",
+     "{corpus}"
+    ],
+    [
+     "unlabelled",
+     "run",
+     "--corpus",
+     "{corpus}",
+     "--cap",
+     "3200",
+     "--halt-hours",
+     "2"
+    ],
+    [
+     "unlabelled",
+     "run",
+     "--corpus",
+     "{corpus}",
+     "--cap",
+     "3200",
+     "--halt-hours",
+     "2",
+     "--model",
+     "mistral_7b"
+    ],
+    [
+     "unlabelled",
+     "analyze",
+     "--corpus",
+     "{corpus}",
+     "--model",
+     "qwen25_7b"
+    ],
+    [
+     "unlabelled",
+     "analyze",
+     "--corpus",
+     "{corpus}",
+     "--model",
+     "mistral_7b"
+    ],
+    [
+     "consistency",
+     "--corpus",
+     "{corpus}"
+    ]
+   ],
+   "corpora": [
+    "sgd",
+    "ami"
+   ]
+  },
+  {
+   "stage": "followup",
+   "device": "gpu",
+   "steps": [
+    [
+     "window_followup",
+     "plan",
+     "--corpus",
+     "{corpus}"
+    ],
+    [
+     "window_followup",
+     "run",
+     "--corpus",
+     "{corpus}",
+     "--model",
+     "qwen25_7b"
+    ],
+    [
+     "window_followup",
+     "analyze",
+     "--corpus",
+     "{corpus}",
+     "--model",
+     "qwen25_7b"
+    ]
+   ],
+   "corpora": [
+    "sgd",
+    "ami"
+   ]
+  },
+  {
+   "stage": "dense",
+   "device": "gpu",
+   "steps": [
+    [
+     "dense",
+     "preflight"
+    ],
+    [
+     "dense",
+     "embed",
+     "--corpus",
+     "{corpus}"
+    ],
+    [
+     "dense",
+     "analyze",
+     "--corpus",
+     "{corpus}",
+     "--sample",
+     "a5"
+    ],
+    [
+     "dense",
+     "analyze",
+     "--corpus",
+     "{corpus}",
+     "--sample",
+     "a5r"
+    ]
+   ],
+   "corpora": [
+    "sgd",
+    "ami"
+   ]
+  },
+  {
+   "stage": "dense_star",
+   "device": "gpu",
+   "steps": [
+    [
+     "dense",
+     "embed",
+     "--corpus",
+     "star"
+    ],
+    [
+     "dense",
+     "analyze",
+     "--corpus",
+     "star",
+     "--sample",
+     "a5"
+    ]
+   ],
+   "corpora": [
+    "star"
+   ]
+  },
+  {
+   "stage": "exposure",
+   "device": "cpu",
+   "steps": [
+    [
+     "exposure"
+    ]
+   ],
+   "corpora": [
+    null
+   ]
+  },
+  {
+   "stage": "checks",
+   "device": "cpu",
+   "steps": [
+    [
+     "checks.icl_check",
+     "--corpus",
+     "{corpus}",
+     "--model",
+     "qwen25_7b"
+    ],
+    [
+     "checks.icl_fresh_check",
+     "--corpus",
+     "{corpus}",
+     "--model",
+     "qwen25_7b"
+    ],
+    [
+     "checks.unlabelled_check",
+     "--corpus",
+     "{corpus}",
+     "--model",
+     "qwen25_7b"
+    ],
+    [
+     "checks.followup_check",
+     "mechanism",
+     "--corpus",
+     "{corpus}"
+    ]
+   ],
+   "corpora": [
+    "sgd",
+    "ami"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+# corpus downloads, row-level outputs, embeddings, model caches and logs never go into the repository
+work/
+data/
+*.npz
+*.npy
+*.jsonl
+*.tar.gz
+*.zip
+__pycache__/
+*.egg-info/
+.pytest_cache/

@@ -1,0 +1,31 @@
+{
+ "language_models": {
+  "qwen25_7b": {
+   "repo": "Qwen/Qwen2.5-7B-Instruct",
+   "revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+   "licence": "Apache-2.0 (LICENSE file of the pinned revision)",
+   "dtype": "bfloat16",
+   "role": "primary"
+  },
+  "mistral_7b": {
+   "repo": "mistralai/Mistral-7B-Instruct-v0.3",
+   "revision": "c170c708c41dac9275d15a8fff4eca08d52bab71",
+   "licence": "Apache-2.0 (model card tag of the pinned revision; verify LICENSE on download)",
+   "dtype": "bfloat16",
+   "role": "optional exploratory model-dependence arm"
+  }
+ },
+ "encoder": {
+  "repo": "FacebookAI/roberta-base",
+  "revision": "e2da8e2f811d1448a5b465c236feacd80ffbac7b",
+  "licence": "MIT"
+ },
+ "dense_retriever": {
+  "repo": "BAAI/bge-small-en-v1.5",
+  "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+  "licence": "MIT",
+  "pooling": "cls",
+  "normalise": "l2"
+ },
+ "_note": "Full 40-character Hugging Face revisions; download with huggingface_hub at exactly these revisions."
+}

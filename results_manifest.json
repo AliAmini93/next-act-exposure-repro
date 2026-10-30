@@ -1,0 +1,40 @@
+{
+ "_note": "Paper exhibit -> commands (see configs/pipeline.json) -> output files under NEXTACT_RESULTS. Outputs are aggregate estimates with 95% cluster-bootstrap intervals; this repository contains no figure or table rendering code.",
+ "results": [
+  {"paper": "Section 4.1; Figure 2; Table 1; Appendix C, Table 4", "what": "randomised presence design, lexical classifier: lag-1 effect per cell, placebo, purges, label permutation, masking, lead-1, AMI overlap sensitivity, decision",
+   "commands": ["lexical run-all", "lexical analyze --corpus {sgd,star,ami} --learner lex"], "outputs": ["lexical_{corpus}_lex.json"]},
+  {"paper": "Section 4.1; Table 1; Appendix C, Table 5", "what": "learner dependence: fine-tuned encoder, k-NN learner, paired lexical-minus-encoder contrast on the same targets, purge shares",
+   "commands": ["encoder --corpus {corpus} --designs D1,D6", "knn --corpus {corpus}", "lexical analyze --learner {enc,knn}", "lexical_explore --corpus {corpus}"],
+   "outputs": ["lexical_{corpus}_enc.json", "lexical_{corpus}_knn.json", "lexical_{corpus}_explore.json"]},
+  {"paper": "Section 4.3 (lexical aggregate); Section 4.5 (row-split diagnostic)", "what": "naive row-level split minus grouped split per cell and overall; observational row-split diagnostic",
+   "commands": ["lexical analyze --learner lex"], "outputs": ["lexical_{corpus}_lex.json (d6_rowsplit)"]},
+  {"paper": "Section 4.2; Figure 3; Table 2; Appendix D, Table 6", "what": "retrieval ICL, exposed minus filtered pool, per cell and interaction, first sample, decisions",
+   "commands": ["icl plan/run/analyze --corpus {sgd,ami,star}"], "outputs": ["icl_{corpus}_{model}.json"]},
+  {"paper": "Section 4.2; Table 2; Appendix D, Tables 6-7", "what": "fresh-sample replication, pooled estimates (one joint cluster bootstrap), replication decisions, fresh-minus-first differences",
+   "commands": ["icl_fresh plan/run/analyze --corpus {sgd,ami}"], "outputs": ["icl_fresh_{corpus}_{model}.json"]},
+  {"paper": "Section 4.3; Figure 4", "what": "natural-weight top-1 change and its weighted continuation and transition contributions (Equation 1)",
+   "commands": ["icl analyze", "icl_fresh analyze"], "outputs": ["icl_{corpus}_{model}.json", "icl_fresh_{corpus}_{model}.json"]},
+  {"paper": "Section 4.5; Figure 6; Appendix G, Table 13", "what": "previous-act copy rate on transition queries per condition and the paired exposed-minus-filtered difference",
+   "commands": ["icl_explore", "icl_fresh analyze"], "outputs": ["icl_{corpus}_{model}_explore.json", "icl_fresh_{corpus}_{model}.json"]},
+  {"paper": "Section 4.5; Appendix G, Figure 7 and Table 12", "what": "cost of the filter: natural-weight top-1 levels per condition and paired differences; weaker AMI filter",
+   "commands": ["icl analyze", "icl_fresh analyze"], "outputs": ["icl_{corpus}_{model}.json", "icl_fresh_{corpus}_{model}.json"]},
+  {"paper": "Section 4.6; Appendix E, Tables 8-9; Appendix D, Table 7 (half-widths)", "what": "label placement and same-dialogue increment, wrong-label condition, common support by similarity gap, fresh-minus-first interval half-widths",
+   "commands": ["icl analyze", "icl_fresh analyze", "consistency --corpus {sgd,ami}"], "outputs": ["icl_fresh_{corpus}_{model}.json", "consistency_{corpus}.json"]},
+  {"paper": "Section 4.6; Appendix F, Table 10", "what": "unlabelled same-dialogue context control (exploratory)",
+   "commands": ["unlabelled plan/run/analyze --corpus {sgd,ami}"], "outputs": ["unlabelled_{corpus}_{model}.json"]},
+  {"paper": "Section 4.6; Appendix F, Table 11", "what": "follow-up decomposition of the unlabelled lag-1 window (Qwen only)",
+   "commands": ["window_followup plan/run/analyze --corpus {sgd,ami}"], "outputs": ["followup/mechanism_{corpus}_qwen25_7b.json"]},
+  {"paper": "Section 4.4; Figure 5; Appendix H, Table 14", "what": "how often each retrieval pipeline returns the lag-1 window (TF-IDF and dense), paired differences",
+   "commands": ["dense preflight/embed/analyze --corpus {sgd,ami,star} --sample {a5,a5r}"], "outputs": ["followup/dense_{corpus}_{sample}.json"]},
+  {"paper": "Appendix J", "what": "exposure rates implied by a published window-level split protocol (no data)",
+   "commands": ["exposure"], "outputs": ["stdout or --out file"]},
+  {"paper": "Appendix K", "what": "separately written recomputations of the language-model, follow-up and dense estimands",
+   "commands": ["checks.icl_check", "checks.icl_fresh_check", "checks.unlabelled_check", "checks.followup_check"], "outputs": ["exit status 0 when every recomputed point equals the aggregate", "followup/independent_*.json"]}
+ ],
+ "not_in_this_repository": [
+  "Appendix B: counts of the 78-study literature review (a manual coding of published papers, not a computation on the corpora)",
+  "Table 3 (a conceptual classification) and Table 15 (a summary of results reported elsewhere)",
+  "figure and table rendering, the manuscript and its sources"
+ ],
+ "sample_codes": {"a5": "first query sample", "a5r": "fresh query sample"}
+}

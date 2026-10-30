@@ -1,0 +1,50 @@
+{
+ "sgd": {
+  "source": {
+   "repo": "https://github.com/google-research-datasets/dstc8-schema-guided-dialogue",
+   "commit": "e852981ae34990f4358979625854259302feaa78",
+   "archive": "sgd/download/sgd_e852981a.tar.gz",
+   "bytes": 36792911,
+   "sha256": "ff97a9ab52b4cc9f25e1a093c96431512465e8377f9a1f57dc710a10484d2188",
+   "licence": "CC BY-SA 4.0 (LICENSE.txt, dataset-specific)",
+   "used": "train/ and dev/ only; test/ sealed"
+  },
+  "scoring": "lrap",
+  "evaluated_role": "SYSTEM",
+  "window": 5,
+  "sampled_dialogues": 3000,
+  "data_fingerprint": "81d6c5aaf8e69d55e0d5d54e2e5e46ebdb84fb46d8ea85e654a1b1feaf19fdea"
+ },
+ "star": {
+  "source": {
+   "repo": "https://github.com/RasaHQ/STAR",
+   "commit": "3058975092cdd09798e4a3a9e4ae135755824545",
+   "archive": "star/download/star_30589750.tar.gz",
+   "bytes": 11120655,
+   "sha256": "0f15f37243b3aa69e13f25d0ee55212e5fe3afefb216adf3bf1a5a07e15285f2",
+   "licence": "MIT (LICENSE.txt of a data-only repository)",
+   "used": "CompletionLevel == 'Complete'; 20% sealed by hash"
+  },
+  "scoring": "logscore",
+  "evaluated_role": "Wizard",
+  "window": 5,
+  "sampled_dialogues": 3000,
+  "data_fingerprint": "83081e28c4cf44a3c35e38ac0ff26304ccceac050e7ebcce167f885656e0151b"
+ },
+ "ami": {
+  "source": {
+   "url": "https://groups.inf.ed.ac.uk/ami/AMICorpusAnnotations/ami_public_manual_1.6.2.zip",
+   "archive": "ami/download/ami_public_manual_1.6.2.zip",
+   "bytes": 22887865,
+   "sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+   "licence": "CC BY 4.0 (LICENCE.txt inside the archive; licence page)",
+   "used": "dialogueActs/, words/, ontologies/da-types.xml, corpusResources/meetings.xml only"
+  },
+  "scoring": "logscore",
+  "evaluated_role": null,
+  "window": 5,
+  "sampled_dialogues": null,
+  "data_fingerprint": "7bf1d5e8b74e7a514214ad9561ecc36962f4e18ff175350a53060fb7291ed5fd"
+ },
+ "_note": "Place each archive at NEXTACT_DATA/<source.archive>. sha256 and bytes are those of the archives used for the paper; data_fingerprint identifies the exact sampled targets (checked before any run)."
+}

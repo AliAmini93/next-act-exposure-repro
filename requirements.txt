@@ -1,0 +1,18 @@
+# Versions of the environment in which every reported result was produced (Python 3.11.15).
+numpy==1.26.4
+pandas==2.2.2
+scipy==1.16.0
+scikit-learn==1.6.1
+joblib==1.5.1
+# GPU stages (encoder fine-tuning, language-model scoring, dense embeddings); CUDA 12.8 build was used
+torch==2.9.1
+transformers==4.57.3
+accelerate==1.12.0
+huggingface_hub==0.36.0
+tokenizers==0.22.1
+safetensors==0.7.0
+# Mistral-7B-Instruct-v0.3 tokenizer only (the Mistral runs used sentencepiece 0.2.2 and protobuf)
+sentencepiece==0.2.2
+protobuf
+# tests
+pytest==9.1.1
