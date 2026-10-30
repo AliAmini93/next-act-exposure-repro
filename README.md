@@ -116,13 +116,9 @@ Each step is a module command, e.g. `python -m nextact.lexical analyze --corpus 
 | retrieval ICL, unlabelled control, follow-up | full (GPU, model download) | bfloat16 inference; scores can differ in the last digits across GPUs and library versions |
 | dense prevalence | full (GPU or CPU) | fp32 [CLS] embeddings |
 | protocol-implied exposure | full (no data) | arithmetic and an index-only simulation |
-| literature-review counts (78 studies) | not included | a manual coding of published papers |
+| literature-review counts (78 studies) | not included | the study-level coding data are outside this code-only repository |
 
-**Verification of the release:**
-- every analysis command was run on the original saved predictions and scores, and reproduced every number of the original aggregate outputs exactly; a few descriptive text labels inside some outputs were reworded;
-- the separately written recomputations agree with them;
-- nine lexical fits (three per corpus, 25,435 predicted targets) were re-run from the corpora with single-threaded BLAS and reproduced the saved predictions exactly;
-- language-model and encoder inference were not re-run for this release.
+**Checking a local installation:** Run `pytest -q` for synthetic checks of data loading, experimental conditions, estimands, scoring and imports. Use the commands above with legitimately obtained corpora and model weights to generate the paper's results. Exact floating-point outputs can depend on the environment; use the pinned versions and single-threaded BLAS for the lexical baseline.
 
 ## Caveats that matter for interpretation
 
@@ -138,5 +134,5 @@ screened for identifier patterns before they are written. Keep `NEXTACT_PRIVATE`
 
 ## Licence
 
-No licence has been chosen yet. Until the authors add a `LICENSE` file, all rights are reserved. The corpora and models
-keep their own licences (above).
+The research code in this repository is released under the [MIT License](LICENSE). Datasets, model weights, and external
+software retain their respective licences and are not redistributed here.
