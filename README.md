@@ -111,7 +111,7 @@ Each step is a module command, e.g. `python -m nextact.lexical analyze --corpus 
 
 | result | from the corpora | notes |
 |---|---|---|
-| randomised presence design, TF-IDF and k-NN learners | full (CPU) | deterministic given the pinned package versions |
+| randomised presence design, TF-IDF and k-NN learners | full (CPU) | bitwise reproducible with single-threaded BLAS (`OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1`), as in the original runs; with multithreaded BLAS, predicted probabilities can differ by up to about 2e-4 |
 | fine-tuned encoder | full (GPU) | GPU training is not bitwise deterministic; intervals should agree, points may differ slightly |
 | retrieval ICL, unlabelled control, follow-up | full (GPU, model download) | bfloat16 inference; scores can differ in the last digits across GPUs and library versions |
 | dense prevalence | full (GPU or CPU) | fp32 [CLS] embeddings |
@@ -121,7 +121,7 @@ Each step is a module command, e.g. `python -m nextact.lexical analyze --corpus 
 **Verification of the release:**
 - every analysis command was run on the original saved predictions and scores, and reproduced every number of the original aggregate outputs exactly; a few descriptive text labels inside some outputs were reworded;
 - the separately written recomputations agree with them;
-- a sample of lexical fits was re-run from the corpora and reproduced the saved predictions exactly;
+- nine lexical fits (three per corpus, 25,435 predicted targets) were re-run from the corpora with single-threaded BLAS and reproduced the saved predictions exactly;
 - language-model and encoder inference were not re-run for this release.
 
 ## Caveats that matter for interpretation
