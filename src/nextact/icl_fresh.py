@@ -560,7 +560,7 @@ def compare_with_a5(corpus, model_tag, T, plans_fresh, S_f, H_f, n_boot=N_BOOT, 
                         same_sign=bool(np.sign(ma[0]) == np.sign(mf[0])))
     return dict(available=True, n_compared=len(out), n_a5_recomputation_mismatches=int(n_mismatch),
                 n_consistent=int(sum(v['consistent'] for v in out.values())), n_same_sign=int(sum(v['same_sign'] for v in out.values())),
-                note='fresh and first-sample means from one joint cluster bootstrap over the union of both query samples '
+                note='fresh and first means from one joint cluster bootstrap over the union of both query samples '
                      '(2,000 replicates, seed 777); shared clusters are resampled jointly', estimands=out)
 
 
