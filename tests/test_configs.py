@@ -48,8 +48,14 @@ def test_repository_contains_no_data_outputs_or_binaries():
     if not tracked:  # not a git checkout (e.g. an archive)
         tracked = [str(p.relative_to(REPO)) for p in REPO.rglob('*') if p.is_file() and not {'.git', '__pycache__', '.pytest_cache', 'work'} & set(p.parts)]
     allowed = ('.py', '.md', '.json', '.txt', '.toml', '.gitignore', '.cfg')
-    bad = [f for f in tracked if not f.endswith(allowed) and 'pytest_cache' not in f]
+    bad = [f for f in tracked if not f.endswith(allowed) and f != 'LICENSE' and 'pytest_cache' not in f]
     assert bad == [], bad
+
+
+def test_licence_is_mit_and_names_no_person():
+    text = (REPO / 'LICENSE').read_text()
+    assert text.startswith('MIT License') and 'Permission is hereby granted, free of charge' in text
+    assert 'Copyright (c) 2026 next-act-exposure-repro contributors' in text
 
 
 def test_every_import_resolves_to_the_package_stdlib_or_requirements():
