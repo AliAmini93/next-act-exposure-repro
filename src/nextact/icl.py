@@ -891,7 +891,7 @@ def mitigation_summary(est):
 # ----------------------------------------------------------------------------------------------------
 def code_hashes():
     files = ['icl.py', 'corpora.py', 'lexical.py',
-             'protocol.py', 'tests/test_icl_icl.py']
+             'protocol.py']
     return {f: C.sha256_file(paths.PACKAGE / f) for f in files if (paths.PACKAGE / f).is_file()}
 
 
