@@ -50,3 +50,22 @@ def test_repository_contains_no_data_outputs_or_binaries():
     allowed = ('.py', '.md', '.json', '.txt', '.toml', '.gitignore', '.cfg')
     bad = [f for f in tracked if not f.endswith(allowed) and 'pytest_cache' not in f]
     assert bad == [], bad
+
+
+def test_every_import_resolves_to_the_package_stdlib_or_requirements():
+    """Including imports inside functions: no module of the original research repository may be imported."""
+    import ast
+    std = set(sys.stdlib_module_names)
+    req = {'numpy', 'pandas', 'scipy', 'sklearn', 'joblib', 'torch', 'transformers', 'huggingface_hub', 'pytest',
+           'accelerate', 'safetensors', 'tokenizers'}
+    bad = []
+    for f in list((REPO / 'src').rglob('*.py')) + list((REPO / 'tests').glob('*.py')) + list((REPO / 'scripts').glob('*.py')):
+        for node in ast.walk(ast.parse(f.read_text())):
+            if isinstance(node, ast.Import):
+                names = [a.name.split('.')[0] for a in node.names]
+            elif isinstance(node, ast.ImportFrom) and node.level == 0:
+                names = [(node.module or '').split('.')[0]]
+            else:
+                continue
+            bad += [(f.name, n) for n in names if n not in std | req | {'nextact'}]
+    assert bad == [], bad
